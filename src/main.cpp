@@ -3,7 +3,7 @@
 #include <iostream>
 #include <Windows.h>
 
-//Including another code file. TODO
+//Including another code file. TODO.
 #include "Game.h"
 
 constexpr float FPS = 60.0f;
