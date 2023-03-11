@@ -20,7 +20,7 @@ namespace Game
 {
 	struct sprite
 	{
-		//The following are public field variables which can be used outside the struct or class. 
+	//The following are public field variables which can be used outside the struct or class. 
 	public:
 		SDL_Texture* pTexture;
 		SDL_Rect src;
