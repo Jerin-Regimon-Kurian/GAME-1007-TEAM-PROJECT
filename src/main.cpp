@@ -147,7 +147,51 @@ void Load() {
 }
 void Input()
 {
+	//Players input variables
+	bool isRightPressed = false;
+	bool isLeftPressed = false;
+	bool isShootPressed = false;
+	float  playerMoveSpeedPx = 600.0f; // pixels per second 
+	float playerShootCooldownDuration = 0.5f; // time between shots
+	float playerShootCooldownTimer = 0.0f; // time down to determine when we  can shoot again
 
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case(SDL_KEYDOWN): //If a key was pressed......
+			//Respond to keys differently
+			switch (event.key.keysym.scancode)
+			{
+			case(SDL_SCANCODE_D):
+				isRightPressed = true;  //keep track of the held state of the input
+			case(SDL_SCANCODE_SPACE):
+				isShootPressed = true;  //keep track of the held state of the input
+				break;
+			case(SDL_SCANCODE_A):
+				isLeftPressed = true;
+				break;
+			}
+			break;
+		case(SDL_KEYUP):
+			switch (event.key.keysym.scancode)
+			{
+			case(SDL_SCANCODE_D):
+				isRightPressed = false;  //when released, update the held state of the input
+
+				break;
+			case(SDL_SCANCODE_A):
+				isLeftPressed = false;
+
+				break;
+			case (SDL_SCANCODE_SPACE):
+				isShootPressed = true;
+				break;
+			}
+			break;
+		}
+	}
 
 }
 
