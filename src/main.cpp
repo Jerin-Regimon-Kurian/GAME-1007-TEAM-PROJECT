@@ -166,7 +166,7 @@ void Input()
 			{
 			case(SDL_SCANCODE_D):
 				isRightPressed = true;  //keep track of the held state of the input
-			case(SDL_SCANCODE_SPACE):
+			case(SDL_SCANCODE_S):
 				isShootPressed = true;  //keep track of the held state of the input
 				break;
 			case(SDL_SCANCODE_A):
@@ -179,13 +179,11 @@ void Input()
 			{
 			case(SDL_SCANCODE_D):
 				isRightPressed = false;  //when released, update the held state of the input
-
 				break;
 			case(SDL_SCANCODE_A):
 				isLeftPressed = false;
-
 				break;
-			case (SDL_SCANCODE_SPACE):
+			case (SDL_SCANCODE_S):
 				isShootPressed = true;
 				break;
 			}
