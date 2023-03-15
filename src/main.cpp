@@ -3,11 +3,13 @@
 #include <Windows.h>
 #include <sdl.h>
 #include <SDL_Image.h>
+#include <vector>
 
 constexpr float FPS = 60.0f;//target frames per second
 constexpr float DELAY_TIME = 1000.0f / FPS;//target time between frames in ms
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 600;
+float deltaTime = 1.0f / FPS;
 
 bool GameIsRunning = true;
 
@@ -77,6 +79,7 @@ sprite Player;
 sprite Enemy;
 sprite Obstacles;
 sprite Projectiles;
+std::vector<sprite>bulletcontainer;
 
 bool Initialize()
 {
@@ -145,16 +148,19 @@ void Load() {
 
 
 }
+
+//Players input variables
+bool isRightPressed = false;
+bool isLeftPressed = false;
+bool isShootPressed = false;
+float  playerMoveSpeedPx = 60.0f; // pixels per second 
+float playerShootCooldownDuration = 0.5f; // time between shots
+float playerShootCooldownTimer = 0.0f; // time down to determine when we  can shoot again
+float BulletSpeed = 500; // pixels per second
+float playerFireRepeatDelay = 1.0;//Seconds
+
 void Input()
 {
-	//Players input variables
-	bool isRightPressed = false;
-	bool isLeftPressed = false;
-	bool isShootPressed = false;
-	float  playerMoveSpeedPx = 600.0f; // pixels per second 
-	float playerShootCooldownDuration = 0.5f; // time between shots
-	float playerShootCooldownTimer = 0.0f; // time down to determine when we  can shoot again
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -166,7 +172,7 @@ void Input()
 			{
 			case(SDL_SCANCODE_D):
 				isRightPressed = true;  //keep track of the held state of the input
-			case(SDL_SCANCODE_S):
+			case(SDL_SCANCODE_SPACE):
 				isShootPressed = true;  //keep track of the held state of the input
 				break;
 			case(SDL_SCANCODE_A):
@@ -183,7 +189,7 @@ void Input()
 			case(SDL_SCANCODE_A):
 				isLeftPressed = false;
 				break;
-			case (SDL_SCANCODE_S):
+			case (SDL_SCANCODE_SPACE):
 				isShootPressed = true;
 				break;
 			}
@@ -195,10 +201,28 @@ void Input()
 
 void update()
 {
-	Player.Dst.y = Player.Dst.y - 2;
-	Enemy.Dst.y = Enemy.Dst.y - 1;
-	Obstacles.Dst.y = Obstacles.Dst.y - 1;
-	Projectiles.Dst.y = Projectiles.Dst.y - 1;
+
+	if (isRightPressed) {
+		Player.Dst.x-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	}
+	if (isLeftPressed) {
+		Player.Dst.x += ((playerMoveSpeedPx*deltaTime) + 0.5f);
+	}
+	if (isShootPressed && playerShootCooldownTimer <= 0.0f) {
+		std::cout << "shoot\n";
+
+		sprite Projectiles = sprite(pRenderer, "../Assets/textures/rocket01.png");
+		Projectiles.Dst.x = Player.Dst.x + Player.Dst.w;
+		Projectiles.Dst.y = Player.Dst.y + (Player.Dst.h / 2) - Projectiles.Dst.h;
+		playerShootCooldownTimer = playerFireRepeatDelay;
+		bulletcontainer.push_back(Projectiles);
+	}
+	playerShootCooldownTimer -= deltaTime;
+
+	for (int i = 0; i < bulletcontainer.size(); i++) {
+		sprite* someprojectiles = &bulletcontainer[i];
+		someprojectiles->Dst.x += BulletSpeed * deltaTime;
+	}
 }
 
 void Draw()
@@ -208,10 +232,15 @@ void Draw()
 
 	Bg.Draw(pRenderer);
 	Player.Draw(pRenderer);
+	/*Enemy.Draw(pRenderer);
+	Obstacles.Draw(pRenderer);
+	Projectiles.Draw(pRenderer);*/
+	for (int i = 0; i < bulletcontainer.size(); i++) {
+		sprite* someprojectiles = &bulletcontainer[i];
+		someprojectiles->Draw(pRenderer);
+	}
 	Enemy.Draw(pRenderer);
 	Obstacles.Draw(pRenderer);
-	Projectiles.Draw(pRenderer);
-
 	SDL_RenderPresent(pRenderer);
 }
 
