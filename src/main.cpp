@@ -85,7 +85,7 @@ bool Initialize()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	pWindow = SDL_CreateWindow("Jerin Regimon Kurian -101457327, Jewel Kakkanattu James - 101435885", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	pWindow = SDL_CreateWindow("Jerin Regimon Kurian -101457327, Jewel Kakkanattu James -101435885", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 	if (pWindow == NULL) 
 	{
 		std::cout << "Failed to create a window." << SDL_GetError() << std::endl;
@@ -152,6 +152,8 @@ void Load() {
 //Players input variables
 bool isUpPressed = false;
 bool isDownPressed = false;
+bool isRightPressed = false;
+bool isLeftPressed = false;
 bool isShootPressed = false;
 float  playerMoveSpeedPx = 60.0f; // pixels per second 
 float playerShootCooldownDuration = 0.5f; // time between shots
@@ -172,10 +174,16 @@ void Input()
 			{
 			case(SDL_SCANCODE_W):
 				isUpPressed = true;
-				break;                  //keep track of the held state of the input
+				break; 
+			case(SDL_SCANCODE_A):
+				isLeftPressed = true;
+				break; 
 			case(SDL_SCANCODE_S):
 				isDownPressed = true;
 				break;
+			case(SDL_SCANCODE_D):
+				isRightPressed = true;
+				break;                  //keep track of the held state of the input
 			case(SDL_SCANCODE_SPACE):
 				isShootPressed = true;  //keep track of the held state of the input
 				break;
@@ -187,8 +195,14 @@ void Input()
 			case(SDL_SCANCODE_W):
 				isUpPressed = false;  //when released, update the held state of the input
 				break;
+			case(SDL_SCANCODE_A):
+				isLeftPressed = false;  //when released, update the held state of the input
+				break;
 			case(SDL_SCANCODE_S):
 				isDownPressed = false;
+				break;
+			case(SDL_SCANCODE_D):
+				isRightPressed = false;  //when released, update the held state of the input
 				break;
 			case (SDL_SCANCODE_SPACE):
 				isShootPressed = false;
@@ -205,6 +219,12 @@ void update()
 
 	if (isUpPressed) {
 		Player.Dst.y-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	}
+	if (isRightPressed) {
+		Player.Dst.x+=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	}
+	if (isLeftPressed) {
+		Player.Dst.x-=((playerMoveSpeedPx*deltaTime) + 0.5f);
 	}
 	if (isDownPressed) {
 		Player.Dst.y += ((playerMoveSpeedPx*deltaTime) + 0.5f);
