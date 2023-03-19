@@ -155,8 +155,8 @@ bool isDownPressed = false;
 bool isRightPressed = false;
 bool isLeftPressed = false;
 bool isShootPressed = false;
-float  playerMoveSpeedPx = 60.0f; // pixels per second 
-float playerShootCooldownDuration = 0.5f; // time between shots
+float  playerMoveSpeedPx = 120.0f; // pixels per second 
+float playerShootCooldownDuration = 0.25f; // time between shots
 float playerShootCooldownTimer = 0.0f; // time down to determine when we  can shoot again
 float BulletSpeed = 500; // pixels per second
 float playerFireRepeatDelay = 1.0;//Seconds
@@ -214,21 +214,79 @@ void Input()
 
 }
 
-void update()
-{
+void update(){
+	float playerDeltaX = 0.0f;
+	float playerDeltaY = 0.0f;
 
-	if (isUpPressed) {
-		Player.Dst.y-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	if (isUpPressed)
+	{
+		playerDeltaY = -playerMoveSpeedPx * deltaTime;
 	}
-	if (isRightPressed) {
-		Player.Dst.x+=((playerMoveSpeedPx*deltaTime) + 0.5f);
+
+	if (isDownPressed)
+	{
+		playerDeltaY = playerMoveSpeedPx * deltaTime;
 	}
-	if (isLeftPressed) {
-		Player.Dst.x-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+
+	if (isLeftPressed)
+	{
+		playerDeltaX = -playerMoveSpeedPx * deltaTime;
 	}
-	if (isDownPressed) {
-		Player.Dst.y += ((playerMoveSpeedPx*deltaTime) + 0.5f);
+
+	if (isRightPressed)
+	{
+		playerDeltaX = playerMoveSpeedPx * deltaTime;
 	}
+
+	// Update player position based on input
+	Player.Dst.x += static_cast<int>(playerDeltaX);
+	Player.Dst.y += static_cast<int>(playerDeltaY);
+
+	// Check if the player is going beyond the screen's boundaries
+	if (Player.Dst.x < 0)
+	{
+		Player.Dst.x = 0;
+	}
+
+	if (Player.Dst.y < 0)
+	{
+		Player.Dst.y = 0;
+	}
+
+	if (Player.Dst.x > SCREEN_WIDTH - Player.Dst.w)
+	{
+		Player.Dst.x = SCREEN_WIDTH - Player.Dst.w;
+	}
+
+	if (Player.Dst.y > SCREEN_HEIGHT - Player.Dst.h)
+	{
+		Player.Dst.y = SCREEN_HEIGHT - Player.Dst.h;
+	}
+
+	// Shoot bullets
+	/*if (isShootPressed && playerShootCooldownTimer <= 0.0f)
+	{
+		sprite bullet(pRenderer, "../Assets/textures/rocket01.png");
+		bullet.Dst.x = Player.Dst.x + Player.Dst.w;
+		bullet.Dst.y = Player.Dst.y + Player.Dst.h / 2 - bullet.Dst.h / 2;
+		bullet.Dst.w = 64;
+		bullet.Dst.h = 64;
+		bulletcontainer.push_back(bullet);
+		playerShootCooldownTimer = playerShootCooldownDuration;
+	}*/
+
+	//if (isUpPressed) {
+	//	Player.Dst.y-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	//}
+	//if (isRightPressed) {
+	//	Player.Dst.x+=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	//}
+	//if (isLeftPressed) {
+	//	Player.Dst.x-=((playerMoveSpeedPx*deltaTime) + 0.5f);
+	//}
+	//if (isDownPressed) {
+	//	Player.Dst.y += ((playerMoveSpeedPx*deltaTime) + 0.5f);
+	//}
 	if (isShootPressed && playerShootCooldownTimer <= 0.0f) {
 		std::cout << "shoot\n";
 
