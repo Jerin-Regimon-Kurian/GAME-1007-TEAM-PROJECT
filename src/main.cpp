@@ -138,15 +138,6 @@ void Load() {
 	Obstacles.Dst.w = shipwidth;
 	Obstacles.Dst.h = shipheight;
 
-
-	/*Projectiles = sprite(pRenderer, "../Assets/textures/rocket01.png");
-	Projectiles.Dst.x = 600;
-	Projectiles.Dst.y = 300;
-	Projectiles.Dst.w = 64;
-	Projectiles.Dst.h = 64;*/
-
-
-
 }
 
 //Players input variables
@@ -155,7 +146,7 @@ bool isDownPressed = false;
 bool isRightPressed = false;
 bool isLeftPressed = false;
 bool isShootPressed = false;
-float  playerMoveSpeedPx = 120.0f; // pixels per second 
+float playerMoveSpeedPx = 120.0f; // pixels per second 
 float playerShootCooldownDuration = 0.25f; // time between shots
 float playerShootCooldownTimer = 0.0f; // time down to determine when we  can shoot again
 float BulletSpeed = 500; // pixels per second
@@ -168,8 +159,7 @@ void Input()
 	{
 		switch (event.type)
 		{
-		case(SDL_KEYDOWN): //If a key was pressed......
-			//Respond to keys differently
+		case(SDL_KEYDOWN):// Response to pressing a key. 
 			switch (event.key.keysym.scancode)
 			{
 			case(SDL_SCANCODE_W):
@@ -183,26 +173,27 @@ void Input()
 				break;
 			case(SDL_SCANCODE_D):
 				isRightPressed = true;
-				break;                  //keep track of the held state of the input
+				break;                  
 			case(SDL_SCANCODE_SPACE):
-				isShootPressed = true;  //keep track of the held state of the input
+				isShootPressed = true;
 				break;
 			}
 			break;
-		case(SDL_KEYUP):
+
+		case(SDL_KEYUP):// Response to stop pressing a key.
 			switch (event.key.keysym.scancode)
 			{
 			case(SDL_SCANCODE_W):
-				isUpPressed = false;  //when released, update the held state of the input
+				isUpPressed = false;  
 				break;
 			case(SDL_SCANCODE_A):
-				isLeftPressed = false;  //when released, update the held state of the input
+				isLeftPressed = false;  
 				break;
 			case(SDL_SCANCODE_S):
 				isDownPressed = false;
 				break;
 			case(SDL_SCANCODE_D):
-				isRightPressed = false;  //when released, update the held state of the input
+				isRightPressed = false;  
 				break;
 			case (SDL_SCANCODE_SPACE):
 				isShootPressed = false;
@@ -263,32 +254,9 @@ void update(){
 		Player.Dst.y = SCREEN_HEIGHT - Player.Dst.h;
 	}
 
-	// Shoot bullets
-	/*if (isShootPressed && playerShootCooldownTimer <= 0.0f)
-	{
-		sprite bullet(pRenderer, "../Assets/textures/rocket01.png");
-		bullet.Dst.x = Player.Dst.x + Player.Dst.w;
-		bullet.Dst.y = Player.Dst.y + Player.Dst.h / 2 - bullet.Dst.h / 2;
-		bullet.Dst.w = 64;
-		bullet.Dst.h = 64;
-		bulletcontainer.push_back(bullet);
-		playerShootCooldownTimer = playerShootCooldownDuration;
-	}*/
-
-	//if (isUpPressed) {
-	//	Player.Dst.y-=((playerMoveSpeedPx*deltaTime) + 0.5f);
-	//}
-	//if (isRightPressed) {
-	//	Player.Dst.x+=((playerMoveSpeedPx*deltaTime) + 0.5f);
-	//}
-	//if (isLeftPressed) {
-	//	Player.Dst.x-=((playerMoveSpeedPx*deltaTime) + 0.5f);
-	//}
-	//if (isDownPressed) {
-	//	Player.Dst.y += ((playerMoveSpeedPx*deltaTime) + 0.5f);
-	//}
+	// Spawn projectiles when shoot is pressed and player shoot cooldown is over ie. less than or equal to 0.
 	if (isShootPressed && playerShootCooldownTimer <= 0.0f) {
-		std::cout << "shoot\n";
+		std::cout << "Shoot\n";
 
 		sprite Projectiles = sprite(pRenderer, "../Assets/textures/bullet.png");
 		Projectiles.Dst.x = Player.Dst.x + Player.Dst.w;
@@ -311,9 +279,6 @@ void Draw()
 
 	Bg.Draw(pRenderer);
 	Player.Draw(pRenderer);
-	/*Enemy.Draw(pRenderer);
-	Obstacles.Draw(pRenderer);
-	Projectiles.Draw(pRenderer);*/
 	for (int i = 0; i < bulletcontainer.size(); i++) {
 		sprite* someprojectiles = &bulletcontainer[i];
 		someprojectiles->Draw(pRenderer);
@@ -323,9 +288,6 @@ void Draw()
 	SDL_RenderPresent(pRenderer);
 }
 
-/**
- * \brief Program Entry Point
- */
 int main(int argc, char* args[])
 {
 	//Display the application console
